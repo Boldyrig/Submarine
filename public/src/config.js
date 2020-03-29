@@ -16,6 +16,7 @@ const CONFIG = {
         LEAVE_TEAM: 'LEAVE_TEAM',
         KICK_FROM_TEAM: 'KICK_FROM_TEAM', // выкинуть из команды
         // about game
+        START_GAME: 'START_GAME',
     }
-}
+};
 export default CONFIG;

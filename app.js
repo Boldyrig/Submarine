@@ -14,6 +14,7 @@ const Common = require('./application/modules/common/Common');
 const UserManager = require('./application/modules/userManager/UserManager');
 const ChatManager = require('./application/modules/chatManager/ChatManager');
 const TeamManager = require('./application/modules/teamManager/TeamManager');
+const GameManager = require('./application/modules/gameManager/GameManager');
 
 // подключение модулей
 const mediator = new Mediator({ TRIGGERS, EVENTS });
@@ -23,6 +24,7 @@ const common = new Common;
 new UserManager({ mediator, io, MESSAGES, db, common });
 new ChatManager({ mediator, io, MESSAGES, db, common });
 new TeamManager({ mediator, io, MESSAGES, db, common });
+new GameManager({ mediator, io, MESSAGES, db, common });
 
 io.on('connection', socket => {
 	console.log('connected', socket.id);

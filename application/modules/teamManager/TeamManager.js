@@ -20,6 +20,7 @@ class TeamManager extends BaseManager {
             socket.on(this.MESSAGES.TEAM_LIST, () => this.teams);
         });
         // настроить триггеры
+        this.mediator.set(this.TRIGGERS.GET_TEAM, (id) => this.getTeam(id));
         this.mediator.set(this.TRIGGERS.GET_TEAMS, () => this.getTeams());
         this.mediator.set(this.TRIGGERS.GET_ROOMID_BY_USERID, (data) => this.getRoomIdByUserId(data));
         // настроить события

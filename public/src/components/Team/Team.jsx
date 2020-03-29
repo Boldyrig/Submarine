@@ -20,14 +20,14 @@ class Team extends React.Component {
     socket.on(this.MESSAGES.CREATE_TEAM, (data) => data && this.setIsJoinedState(true));
     socket.on(this.MESSAGES.JOIN_TO_TEAM, (data) => data && this.setIsJoinedState(true));
     socket.on(this.MESSAGES.LEAVE_TEAM, (data) => data && (this.setGameState(false) || this.setIsJoinedState(false)));
+    socket.on(this.MESSAGES.START_GAME, (data) => data && this.setGameState(true));
     /*
-      TEAM_LIST: 'TEAM_LIST', // список комнат
-      CREATE_TEAM: 'CREATE_TEAM',
-      REMOVE_TEAM: 'REMOVE_TEAM',
-      JOIN_TO_TEAM: 'JOIN_TO_TEAM',
-      LEAVE_TEAM: 'LEAVE_TEAM',
-      KICK_FROM_TEAM: 'KICK_FROM_TEAM', // выкинуть из команды
-    */
+          KICK_FROM_TEAM: 'KICK_FROM_TEAM', // выкинуть из команды
+        */
+  }
+
+  startGame() {
+    socket.emit(this.MESSAGES.START_GAME, { token : localStorage.getItem('token') });
   }
 
   joinToTeam(elem) {
@@ -67,7 +67,7 @@ class Team extends React.Component {
   renderCreateTeam() {
     return (
       <div className="team__create">
-        <input id="team__create__name"></input>
+        <input id="team__create__name"/>
         <a href="#a" className="team__create__btn" onClick={() => this.createTeam()}>Create</a>
       </div>
     );
@@ -95,21 +95,25 @@ class Team extends React.Component {
           <div className="team__lobby" key={ team }>
             <p className="team__name">{ this.state.teams[team].name } { (team === joinedTeam) ? '(joined)' : null }</p>
             { (team === localStorage.getItem('id')) ? //если капитан
-              <a 
-                href="#a" 
-                onClick = { (elem) => this.removeTeam(elem) } 
-                className="join__team__btn" 
-                roomid={this.state.teams[team].roomId}
-              >Remove</a> : 
+              <div className="team__control">
+                <a
+                  href="#a"
+                  onClick = { (elem) => this.removeTeam(elem) }
+                  className="join__team__btn"
+                  roomid={this.state.teams[team].roomId}
+                >Remove</a>
+                <a href="#a" className="join__team__btn game__btn" onClick = { () => this.startGame() }>Start Game</a>
+              </div>
+                :
               (team === joinedTeam) ? //если присоединился
               <a 
-                href="#a" 
+                href="#a"
                 onClick = { (elem) => this.leaveTeam(elem) } 
                 className="join__team__btn" 
                 roomid={this.state.teams[team].roomId}
               >Leave</a> : 
               <a 
-                href="#a" 
+                href="#a"
                 onClick = { (elem) => this.joinToTeam(elem) } 
                 className="join__team__btn" 
                 roomid={this.state.teams[team].roomId}
@@ -126,7 +130,6 @@ class Team extends React.Component {
         <div className="main__menu">
           <a href="#a" className="create__team__btn" onClick = { () => this.setState({createTeam: true}) }>Create Team</a>
           <a href="#a" className="team__list__btn" onClick = { () => this.setState({createTeam: false}) }>Team List</a>
-          <a href="#a" className="game__btn" onClick = { () => this.setGameState(true) }>Game</a>
           <a href="#a" className="log__out" onClick = { () => this.logout() }>Log Out</a>
         </div>
       { this.state.createTeam ? this.renderCreateTeam() : this.renderTeamList() }
